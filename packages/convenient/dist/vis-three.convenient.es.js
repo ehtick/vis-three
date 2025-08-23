@@ -1,5 +1,5 @@
-import { PointLight as S, Mesh as w, BoxGeometry as p, MeshStandardMaterial as P, AmbientLight as g, SphereGeometry as E, WebGLRenderer as v, PCFSoftShadowMap as x, Scene as L, PerspectiveCamera as b, Vector3 as y, Object3D as R, Line as z, Points as j, Sprite as C } from "three";
-class H {
+import { PointLight as p, Mesh as g, BoxGeometry as E, MeshStandardMaterial as P, AmbientLight as v, SphereGeometry as R, WebGLRenderer as x, PCFSoftShadowMap as L, Scene as b, PerspectiveCamera as y, Vector3 as S, Object3D as z, Line as j, Points as C, Sprite as M } from "three";
+class A {
   constructor(t) {
     this.canvas = document.createElement("canvas");
     const e = window.devicePixelRatio;
@@ -21,7 +21,7 @@ class H {
     return this.canvas;
   }
   /**
-   * 清空画布
+   * 清空画布，不传参默认全部清除
    * @param x position x px
    * @param y  position z px
    * @param width width px
@@ -61,7 +61,7 @@ class H {
     return this.canvas.width = t * devicePixelRatio, this.canvas.height = e * devicePixelRatio, this;
   }
 }
-class M {
+class m {
   constructor() {
     this.listeners = /* @__PURE__ */ new Map();
   }
@@ -218,47 +218,58 @@ class M {
     return !![...this.listeners.keys()].length;
   }
 }
-var m = /* @__PURE__ */ ((h) => (h.RELOAD = "reload", h.UPDATE = "update", h))(m || {});
-const r = class r extends M {
+var r;
+(function(h) {
+  h.RELOAD = "reload", h.UPDATE = "update";
+})(r || (r = {}));
+const c = class c extends m {
   constructor(t) {
     super(), this.data = new Proxy(t, {
-      get: r.proxyGetter,
-      set: r.proxySetter.bind(this)
+      get: c.proxyGetter,
+      set: c.proxySetter.bind(this)
     });
   }
+  /**
+   * 设置尺寸，会通过配置的width和height变化而自动触发
+   * @returns this
+   */
   setSize() {
     return this;
   }
+  /**
+   * 重绘画布，会通过配置的变化自动触发
+   * @returns this
+   */
   draw() {
     return this;
   }
 };
-r.proxyGetter = function(t, e, i) {
+c.proxyGetter = function(t, e, i) {
   return Reflect.get(t, e, i);
-}, r.proxySetter = function(t, e, i, s) {
+}, c.proxySetter = function(t, e, i, s) {
   const o = Reflect.set(t, e, i, s);
   return (e === "width" || e === "height") && (this.setSize(), this.dispatchEvent({
-    type: "reload"
-    /* RELOAD */
+    type: r.RELOAD
   })), this.draw(), this.dispatchEvent({
-    type: "update"
-    /* UPDATE */
+    type: r.UPDATE
   }), o;
 };
-let u = r;
-class W {
+let a = c;
+class H {
+  /**
+   * 该动作的下一步方法
+   */
   next() {
-    console.warn(
-      `this action can not set next function: ${this.constructor.name}`
-    );
+    console.warn(`this action can not set next function: ${this.constructor.name}`);
   }
+  /**
+   * 该动作的上一步方法
+   */
   prev() {
-    console.warn(
-      `this action can not set prev function: ${this.constructor.name}`
-    );
+    console.warn(`this action can not set prev function: ${this.constructor.name}`);
   }
 }
-class A {
+class W {
   constructor(t) {
     this.actionList = [], this.index = -1, this.step = 50, this.step = t || 50;
   }
@@ -274,6 +285,10 @@ class A {
     const i = this.actionList;
     this.index === i.length - 1 && i.length >= this.step ? (i.shift(), this.index = this.actionList.length - 1) : this.index !== -1 ? i.splice(this.index + 1, i.length - 1) : this.index === -1 && (this.actionList = []), this.actionList.push(t), e ? this.redo() : this.index += 1;
   }
+  /**
+   * 恢复动作，执行当前动作的next
+   * @returns
+   */
   redo() {
     if (this.index += 1, this.index > this.actionList.length - 1) {
       this.index = this.actionList.length - 1;
@@ -281,75 +296,85 @@ class A {
     }
     this.do("next");
   }
+  /**
+   * 撤销动作，执行当前动作的prev
+   * @returns
+   */
   undo() {
     this.index < 0 || (this.do("prev"), this.index -= 1);
   }
+  /**
+   * 清空整个历史动作缓存
+   */
   clear() {
     this.actionList = [];
   }
 }
-const l = new S("rgb(255, 255, 255)", 0.5, 200, 1);
-l.position.set(-30, 5, 20);
+const u = new p("rgb(255, 255, 255)", 0.5, 200, 1);
+u.position.set(-30, 5, 20);
+u.castShadow = !0;
+const l = new g(new E(80, 2, 80), new P({
+  color: "rgb(255, 255, 255)"
+}));
+l.position.set(0, -11, 0);
+l.receiveShadow = !0;
 l.castShadow = !0;
-const d = new w(
-  new p(80, 2, 80),
-  new P({
-    color: "rgb(255, 255, 255)"
-  })
-);
-d.position.set(0, -11, 0);
-d.receiveShadow = !0;
-d.castShadow = !0;
 const n = class n {
   constructor(t) {
-    const e = new v({
+    const e = new x({
       antialias: !0,
       preserveDrawingBuffer: !0
     });
-    e.setPixelRatio(window.devicePixelRatio), e.setClearColor("rgb(150, 150, 150)"), e.shadowMap.enabled = !0, e.shadowMap.type = x;
-    const i = new L(), s = new b(
-      45,
-      window.innerWidth / window.innerHeight,
-      1,
-      500
-    );
-    s.position.set(0, 0, 35), s.up.x = 0, s.up.y = 1, s.up.z = 0, s.lookAt(new y(0, 0, 0)), i.add(n.ambientLight), i.add(n.pointLight), i.add(n.plane), this.scene = i, this.renderer = e, this.camera = s, this.object = new R(), t != null && t.material && this.setMaterial(t.material), t != null && t.dom && this.setDom(t.dom);
+    e.setPixelRatio(window.devicePixelRatio), e.setClearColor("rgb(150, 150, 150)"), e.shadowMap.enabled = !0, e.shadowMap.type = L;
+    const i = new b(), s = new y(45, window.innerWidth / window.innerHeight, 1, 500);
+    s.position.set(0, 0, 35), s.up.x = 0, s.up.y = 1, s.up.z = 0, s.lookAt(new S(0, 0, 0)), i.add(n.ambientLight), i.add(n.pointLight), i.add(n.plane), this.scene = i, this.renderer = e, this.camera = s, this.object = new z(), t != null && t.material && this.setMaterial(t.material), t != null && t.dom && this.setDom(t.dom);
   }
-  // 设置展示的材质
+  /**
+   * 设置展示材质
+   * @param material 要展示的材质
+   * @returns this
+   */
   setMaterial(t) {
     if (this.scene.remove(this.object), this.material = t, t.type.includes("Mesh") || t.type === "ShaderMaterial" || t.type === "RawShaderMaterial")
-      this.object = new w(n.geometry, t);
+      this.object = new g(n.geometry, t);
     else if (t.type.includes("Line"))
-      this.object = new z(n.geometry, t);
-    else if (t.type.includes("Points"))
       this.object = new j(n.geometry, t);
+    else if (t.type.includes("Points"))
+      this.object = new C(n.geometry, t);
     else if (t.type.includes("Sprite"))
-      this.object = new C(t);
+      this.object = new M(t);
     else
-      return console.warn(
-        `material displayer can not support this type material: '${t.type}'`
-      ), this;
+      return console.warn(`material displayer can not support this type material: '${t.type}'`), this;
     return this.object.castShadow = !0, this.object.receiveShadow = !0, this.scene.add(this.object), this;
   }
-  // 设置目标dom对象
+  /**
+   * 设置渲染的目标dom
+   * @param dom
+   * @returns this
+   */
   setDom(t) {
     return this.dom = t, this.setSize(), t.appendChild(this.renderer.domElement), this;
   }
-  // 设置尺寸
+  /**
+   * 设置整个展示器的尺寸，不传参默认目标dom大小
+   * @param width
+   * @param height
+   * @returns this
+   */
   setSize(t, e) {
     if (t && e)
       this.camera.aspect = t / e, this.camera.updateProjectionMatrix(), this.renderer.setSize(t, e, !0);
     else {
       if (!this.dom)
-        return console.warn(
-          "material displayer must set dom before setSize with empty parameters"
-        ), this;
+        return console.warn("material displayer must set dom before setSize with empty parameters"), this;
       const i = this.dom;
       this.camera.aspect = i.offsetWidth / i.offsetHeight, this.camera.updateProjectionMatrix(), this.renderer.setSize(i.offsetWidth, i.offsetHeight, !0);
     }
     return this;
   }
-  // 渲染方法
+  /**
+   * 渲染展示器
+   */
   render() {
     this.renderer.render(this.scene, this.camera);
   }
@@ -361,31 +386,33 @@ const n = class n {
   getDataURL(t) {
     return this.renderer.domElement.toDataURL(t || "image/png");
   }
-  // 内存销毁
+  /**
+   * 销毁当前展示器的内存
+   */
   dispose() {
     this.renderer.dispose();
   }
 };
-n.ambientLight = new g("rgb(255, 255, 255)", 0.7), n.pointLight = l, n.geometry = new E(10, 12, 12), n.plane = d, n.dispose = () => {
+n.ambientLight = new v("rgb(255, 255, 255)", 0.7), n.pointLight = u, n.geometry = new R(10, 12, 12), n.plane = l, n.dispose = () => {
   n.geometry.dispose(), n.plane.geometry.dispose();
 };
-let a = n;
-const c = class c {
+let f = n;
+const d = class d {
+  // 环境光
   constructor(t) {
-    const e = new v({
+    const e = new x({
       antialias: !0,
       preserveDrawingBuffer: !0
     });
-    e.setPixelRatio(window.devicePixelRatio), e.setClearColor("rgb(150, 150, 150)"), e.shadowMap.enabled = !0, e.shadowMap.type = x;
-    const i = new L(), s = new b(
-      45,
-      window.innerWidth / window.innerHeight,
-      1,
-      500
-    );
-    s.position.set(0, 0, 35), s.up.x = 0, s.up.y = 1, s.up.z = 0, s.lookAt(new y(0, 0, 0)), i.add(c.ambientLight), this.scene = i, this.renderer = e, this.camera = s, t != null && t.texture && this.setTexture(t.texture), t != null && t.dom && this.setDom(t.dom);
+    e.setPixelRatio(window.devicePixelRatio), e.setClearColor("rgb(150, 150, 150)"), e.shadowMap.enabled = !0, e.shadowMap.type = L;
+    const i = new b(), s = new y(45, window.innerWidth / window.innerHeight, 1, 500);
+    s.position.set(0, 0, 35), s.up.x = 0, s.up.y = 1, s.up.z = 0, s.lookAt(new S(0, 0, 0)), i.add(d.ambientLight), this.scene = i, this.renderer = e, this.camera = s, t != null && t.texture && this.setTexture(t.texture), t != null && t.dom && this.setDom(t.dom);
   }
-  // 设置贴图
+  /**
+   * 设置展示的贴图
+   * @param texture 贴图
+   * @returns this
+   */
   setTexture(t) {
     return this.scene.background = t, this;
   }
@@ -399,9 +426,7 @@ const c = class c {
       this.camera.aspect = t / e, this.camera.updateProjectionMatrix(), this.renderer.setSize(t, e, !0);
     else {
       if (!this.dom)
-        return console.warn(
-          "texture displayer must set dom before setSize with empty parameters"
-        ), this;
+        return console.warn("texture displayer must set dom before setSize with empty parameters"), this;
       const i = this.dom;
       this.camera.aspect = i.offsetWidth / i.offsetHeight, this.camera.updateProjectionMatrix(), this.renderer.setSize(i.offsetWidth, i.offsetHeight, !0);
     }
@@ -424,15 +449,15 @@ const c = class c {
     this.renderer.dispose();
   }
 };
-c.ambientLight = new g("rgb(255, 255, 255)", 1);
-let f = c;
+d.ambientLight = new v("rgb(255, 255, 255)", 1);
+let w = d;
 export {
-  W as Action,
-  H as CanvasGenerator,
-  u as CanvasReactor,
-  M as EventDispatcher,
-  A as History,
-  a as MaterialDisplayer,
-  m as RECT_EVENT,
-  f as TextureDisplayer
+  H as Action,
+  A as CanvasGenerator,
+  a as CanvasReactor,
+  m as EventDispatcher,
+  W as History,
+  f as MaterialDisplayer,
+  r as RECT_EVENT,
+  w as TextureDisplayer
 };

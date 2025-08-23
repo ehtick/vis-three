@@ -13,6 +13,14 @@ export declare class CanvasReactor<O extends BaseData = BaseData> extends EventD
     canvas: HTMLCanvasElement;
     data: O;
     constructor(config: O);
+    /**
+     * 设置尺寸，会通过配置的width和height变化而自动触发
+     * @returns this
+     */
     setSize(): this;
+    /**
+     * 重绘画布，会通过配置的变化自动触发
+     * @returns this
+     */
     draw(): this;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@vis-three/convenient",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "vis-three convenient",
   "main": "dist/vis-three.convenient.umd.js",
   "module": "dist/vis-three.convenient.es.js",
@@ -13,11 +13,11 @@
     "build": "tsc -p ./tsconfig.json  && vite build",
     "lint": "npx eslint *.js src/**/*.ts --fix"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "files": [
     "dist",
     "**/*.d.ts",
+    "**/*.js",
     "package.json",
     "LICENSE"
   ]

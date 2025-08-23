@@ -1,6 +1,8 @@
 import { AmbientLight, Texture } from "three";
 export interface TextureDisplayerParameters {
+    /**展示的目标dom */
     dom?: HTMLElement;
+    /**展示的贴图 */
     texture?: Texture;
 }
 export declare class TextureDisplayer {
@@ -11,6 +13,11 @@ export declare class TextureDisplayer {
     private scene;
     private camera;
     constructor(parameters?: TextureDisplayerParameters);
+    /**
+     * 设置展示的贴图
+     * @param texture 贴图
+     * @returns this
+     */
     setTexture(texture: Texture): this;
     setDom(dom: HTMLElement): this;
     setSize(width?: number, height?: number): this;

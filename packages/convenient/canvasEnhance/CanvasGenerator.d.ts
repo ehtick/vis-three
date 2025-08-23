@@ -1,6 +1,9 @@
 export interface CanvasGeneratorParameters {
+    /**画布宽 */
     width?: number;
+    /**画布高 */
     height?: number;
+    /**画布的背景色 */
     bgColor?: string;
 }
 interface PreviewParameters {
@@ -23,7 +26,7 @@ export declare class CanvasGenerator {
      */
     getDom(): HTMLCanvasElement;
     /**
-     * 清空画布
+     * 清空画布，不传参默认全部清除
      * @param x position x px
      * @param y  position z px
      * @param width width px
