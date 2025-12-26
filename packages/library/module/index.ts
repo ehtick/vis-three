@@ -101,6 +101,10 @@ export const modules = [
   particle,
 ];
 
-export { EventGeneratorManager } from "@vis-three/module-object";
+export {
+  BasicEventConfig,
+  EventGenerator,
+  EventGeneratorManager,
+} from "@vis-three/module-object";
 export { AniScriptGeneratorManager } from "@vis-three/module-animation";
 export { ShaderGeneratorManager } from "@vis-three/module-material";
